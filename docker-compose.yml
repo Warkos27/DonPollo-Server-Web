@@ -5,19 +5,21 @@ services:
     image: eclipse-mosquitto:latest
     container_name: donpollo_mosquitto
     ports:
-      - "1883:1883" # Puerto MQTT para el ESP32 y Kotlin
-      - "9001:9001" # Puerto WebSockets para tu futura página web React
+      - "1883:1883" 
+      - "9001:9001" 
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
+    networks:
+      - donpollo_network
     restart: unless-stopped
 
   influxdb:
     image: influxdb:2.0
     container_name: donpollo_influxdb
     ports:
-      - "8086:8086" # Puerto del panel de control de la base de datos
+      - "8086:8086" 
     volumes:
       - influxdb_data:/var/lib/influxdb2
     environment:
@@ -26,9 +28,10 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=donpollo123
       - DOCKER_INFLUXDB_INIT_ORG=granja
       - DOCKER_INFLUXDB_INIT_BUCKET=sensores
+    networks:
+      - donpollo_network
     restart: unless-stopped
 
-# --- NUEVO SERVICIO AÑADIDO ---
   telegraf:
     image: telegraf:latest
     container_name: donpollo_telegraf
@@ -37,9 +40,15 @@ services:
     depends_on:
       - mosquitto
       - influxdb
+    networks:
+      - donpollo_network
     restart: unless-stopped
 
 volumes:
   mosquitto_data:
   mosquitto_log:
   influxdb_data:
+
+networks:
+  donpollo_network:
+    driver: bridge
