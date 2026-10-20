@@ -9,7 +9,8 @@ import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts';
 
-const MQTT_URL = 'ws://broker.hivemq.com:8000/mqtt';
+//const MQTT_URL = 'ws://broker.hivemq.com:8000/mqtt';
+const MQTT_URL = 'ws://192.168.4.4:9001/mqtt';
 const MQTT_TOPIC = 'donpollo/markos_lote1/telemetria';
 const MAX_HISTORY = 30;
 
